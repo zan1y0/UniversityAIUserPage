@@ -1,4 +1,6 @@
-登录注册与JWT已接入，默认首屏为登录页。启动、接口与安全配置见 [登录注册与JWT](docs/登录注册与JWT.md)。
+默认首屏为统一邮箱登录。学生自助注册，老师用邀请激活，管理员使用后台；多角色账号登录后可切换已分配的工作空间。启动、SMTP、历史账号认领和接口见 [统一邮箱认证与三角色 RBAC](https://github.com/zan1y0/UniversityAIUser/blob/main/docs/%E7%BB%9F%E4%B8%80%E9%82%AE%E7%AE%B1%E8%AE%A4%E8%AF%81%E4%B8%8E%E4%B8%89%E8%A7%92%E8%89%B2RBAC-%E4%BA%A4%E4%BB%98.md)。
+
+数字人真实聊天已接入异步互动接口，调用流程、IDEA/VS Code 启动方法及验证命令见 [数字人聊天接入](docs/数字人聊天接入.md)。
 
 # UniversityAIUserPage
 
@@ -13,18 +15,18 @@ npm ci
 npm run dev
 ```
 
-访问 http://127.0.0.1:5173/ 。本机依赖已安装。需要 Node.js >=22.12.0。VS Code“终端 → 运行任务”提供开发服务、类型检查和测试入口。
+访问 http://127.0.0.1:5173/ 。需要 Node.js >=22.12.0。VS Code“终端 → 运行任务”提供开发服务、类型检查和测试入口。
 
-默认是**演示模式**：没有后端也能打开全部11个模块，使用明确标注的合成学习数据验证交互。演示回复、录取资料、评分和统计不是实际业务结果。
+默认进入**真实接口模式**并显示邮箱登录页。可从登录页进入演示模式，使用标注为演示的合成学习数据体验各模块。
 
-点击右上角切换到**真实接口模式**：账号登录、档案、学习资料和所有操作通过正式 `/api/v1` 契约。后端尚未实现或不可用时显示明确错误，绝不悄悄回退演示。网页不能代替真实AI、OCR、评分或数据库服务。
+**真实接口模式**下，账号登录、档案、学习资料和所有操作通过正式 `/api/v1` 契约。后端尚未实现或不可用时显示明确错误，绝不悄悄回退演示。网页不能代替真实AI、OCR、评分或数据库服务。
 
 ## 正式 API 与页面实现
 
-- 唯一接口契约：`contracts/openapi.json` / `openapi.yaml`，对应Apifox“考研 AI 导学系统 · API 契约 v1.0.0”。本次没有更改这份契约。
-- `src/api/generated.ts`：81个操作的TypeScript输入/输出类型及216个Schema类型。
+- 唯一接口契约：`contracts/openapi.json` / `openapi.yaml`，对应Apifox“考研 AI 导学系统 · API 契约 v1.5.0”。覆盖邮箱认证、三角色权限、教学管理、督学与聊天附件，导入与调试见 [Apifox联调](https://github.com/zan1y0/UniversityAIUser/blob/main/apifox/README.md)。
+- `src/api/generated.ts`：138 个操作的 TypeScript 输入输出类型及 323 个 Schema 类型；由契约生成。
 - `src/api/schema.ts` / `contract-data.json`：字段、枚举、必填、边界、条件分支、空值和未知字段的运行时校验。
-- `src/api/client.ts`：Session Cookie、登录前CSRF、统一错误码、traceId、204、FormData、私有下载、请求超时及取消。没有保留旧 `/api/user/login` 适配或数字200成功码兼容。
+- `src/api/client.ts`：JWT Cookie及CSRF Session、注册／登录前CSRF与成功后轮换、统一错误码、traceId、204、FormData、私有下载、请求超时及取消。没有保留旧 `/api/user/login` 适配或数字200成功码兼容。
 - `src/api/contract.ts`：严格操作入口、幂等键、异步任务查询与SSE事件。重试复用原请求体和幂等键，版本冲突不会自动覆盖记录。
 - `src/components/ContractWorkspace.vue`：真实模式的11模块学习操作面板，复用契约表单、关联资料选择、内容与反馈展示。档案在学习计划中维护，附件在答疑、数字人与复试中管理；不新增业务模块。
 - `src/views/`：11模块的本地演示页面与登录页，保留完整原有交互。
@@ -36,12 +38,12 @@ npm run dev
 复制 `.env.example` 为 `.env.local` 后按实际后端地址配置：
 
 ```dotenv
-VITE_APP_MODE=demo
+VITE_APP_MODE=live
 VITE_API_BASE=/api/v1
 API_PROXY_TARGET=http://127.0.0.1:8080
 ```
 
-Vite本地代理保留完整 `/api/v1` 路径；需要默认真实模式时将VITE_APP_MODE设为live。所有VITE_变量会进入浏览器，不得保存任何密码、供应商密钥或数据库配置。浏览器凭据仅由HttpOnly Cookie携带，不读取或保存会话Cookie。
+Vite本地代理保留完整 `/api/v1` 路径。所有VITE_变量会进入浏览器，不得保存任何密码、供应商密钥或数据库配置。浏览器凭据仅由HttpOnly Cookie携带，不读取或保存会话Cookie。
 
 ## 模块覆盖
 
@@ -78,4 +80,3 @@ npm run test:e2e
 契约更新后可使用可选生成工具：`npm run contract:generate`（需Python 3），之后运行格式化、类型检查与测试。生成器仅同步类型与运行时Schema，不新增接口、不实现后端。
 
 历史说明与旧验证记录保留在docs，当前能力和验证结论以本README及最新审查记录为准。现有deploy/Dockerfile为历史文件，本次没有修改或执行部署。
-

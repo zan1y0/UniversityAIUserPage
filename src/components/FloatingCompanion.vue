@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, nextTick, ref } from 'vue';
-import { Mic, Camera, Mail, ArrowUp, Volume2, X, Aperture } from 'lucide-vue-next';
-import { request, isRecord } from '../api/client';
-import { execute, waitJob } from '../api/contract';
+import { Mic, Camera, Mail, ArrowUp, Volume2, X, Aperture, Settings } from 'lucide-vue-next';
+import { backend } from '../api/backend';
+import { execute } from '../api/contract';
 import { useAppStore } from '../stores/app';
 import { useSpeech } from '../composables/useSpeech';
+import { studyModes, type StudyMode } from '../api/study-supervision';
+import SupervisionPanel from './SupervisionPanel.vue';
 const app = useAppStore(),
   open = ref(false),
   blink = ref(false),
@@ -82,6 +84,25 @@ const contextId = crypto.randomUUID(),
 const speech = useSpeech((text) => {
   draft.value = (draft.value + ' ' + text).trim().slice(0, 4000);
 });
+const settingsOpen = ref(false);
+const studyMode = ref<StudyMode>('GENTLE');
+const reminderCount = ref(0);
+const studyMotion = ref<StudyMode>();
+let motionTimer: ReturnType<typeof setTimeout>;
+function supervisionStatus(mode: StudyMode, count: number) {
+  studyMode.value = mode;
+  if (count > reminderCount.value && open.value) log.value?.scrollTo(0, 0);
+  reminderCount.value = count;
+}
+function animateStudy(mode: StudyMode) {
+  clearTimeout(motionTimer);
+  studyMotion.value = mode;
+  motionTimer = setTimeout(() => (studyMotion.value = undefined), 560);
+}
+function showSettings(show: boolean) {
+  settingsOpen.value = show;
+  if (show) void nextTick(() => log.value?.scrollTo(0, 0));
+}
 const files = ref<Attachment[]>([]),
   video = ref<HTMLVideoElement>(),
   cameraOpen = ref(false);
@@ -166,12 +187,7 @@ async function send() {
         if (item.id) continue;
         const body = new FormData();
         body.append('file', item.file);
-        const data = await request('/avatar/attachments', {
-          method: 'POST',
-          body,
-          signal: cancel.signal,
-        });
-        if (!isRecord(data) || typeof data.id !== 'string') throw Error('附件上传失败');
+        const data = await execute('op086', { body }, { signal: cancel.signal });
         item.id = data.id;
       }
     const history = messages.value
@@ -188,14 +204,7 @@ async function send() {
     if (app.mode === 'live') {
       const room = 4000 - text.length - 8;
       const input = history && room > 0 ? history.slice(-room) + '\n当前问题：' + text : text;
-      const task = await execute(
-        'op014',
-        { body: { text: input, contextId } },
-        { key: crypto.randomUUID(), signal: cancel.signal },
-      );
-      const result = await waitJob(task.jobId, cancel.signal);
-      if (result?.kind !== 'avatarInteraction') throw Error('数字人回复格式异常');
-      reply = result.text;
+      reply = await backend.avatarChat(input, contextId, cancel.signal);
     }
     messages.value.push({ who: '研小途', text: reply });
   } catch (e) {
@@ -217,6 +226,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   clearTimeout(timer);
+  clearTimeout(motionTimer);
   cancel.abort();
   window.removeEventListener('resize', resize);
 });
@@ -225,8 +235,10 @@ onBeforeUnmount(() => {
   <button
     class="orb"
     :class="{ awake: open, blink }"
+    :data-study-motion="studyMotion"
     :style="{ left: x + 'px', top: y + 'px' }"
     :aria-expanded="open"
+    :aria-description="reminderCount ? '有 ' + reminderCount + ' 项督学提醒' : undefined"
     aria-label="研小途，切换对话"
     @pointerdown="down"
     @pointermove="move"
@@ -272,11 +284,12 @@ onBeforeUnmount(() => {
       <ellipse cx="102" cy="67" rx="8" ry="15" fill="#8a909a" stroke="#88f5ff" stroke-width="2" />
       <path d="M42 104 Q64 112 84 98" fill="none" stroke="#8af8ff" />
     </svg>
+    <span v-if="reminderCount" class="reminder-count" aria-hidden="true">{{ reminderCount }}</span>
   </button>
   <section v-show="open" class="orb-panel" :style="panel" aria-label="研小途对话">
     <header>
       <span class="dot"></span><strong>研小途</strong
-      ><small>{{ app.mode === 'demo' ? '演示对话' : '陪伴督学' }}</small
+      ><small class="mode-badge" :data-mode="studyMode">{{ studyModes[studyMode].label }}</small
       ><button
         aria-label="收起对话"
         @click="
@@ -289,6 +302,15 @@ onBeforeUnmount(() => {
       </button>
     </header>
     <div ref="log" class="orb-log" aria-live="polite">
+      <SupervisionPanel
+        :demo="app.mode === 'demo'"
+        :settings="settingsOpen"
+        :open="open"
+        @status="supervisionStatus"
+        @motion="animateStudy"
+        @speak="speech.speak"
+        @show-tasks="showSettings(true)"
+      />
       <p v-if="!messages.length" class="welcome">今天想先完成什么小目标？</p>
       <article v-for="(m, i) in messages" :key="i" :class="{ mine: m.who === '我' }">
         <small>{{ m.who }}</small>
@@ -297,7 +319,7 @@ onBeforeUnmount(() => {
           }}<a
             v-for="item in m.attachments"
             :key="item.url"
-            :href="item.id ? '/api/v1/files/' + item.id : item.url"
+            :href="item.url"
             :download="item.file.name"
             ><Mail :size="15" /> {{ item.file.name }}</a
           >
@@ -317,6 +339,7 @@ onBeforeUnmount(() => {
       <small v-if="error || speech.error.value" role="alert">{{
         error || speech.error.value
       }}</small>
+      <small v-if="app.mode === 'live' && files.length">附件会单独上传，AI 回复只读取文字。</small>
       <div class="chips">
         <span v-for="(item, i) in files" :key="item.url"
           >{{ item.file.name }}
@@ -342,6 +365,14 @@ onBeforeUnmount(() => {
           <Mic :size="18" />{{ speech.listening.value ? '录音中' : '语音' }}</button
         ><button class="pill" :disabled="busy" :aria-pressed="cameraOpen" @click="startCamera">
           <Camera :size="18" />拍照
+        </button>
+        <button
+          class="pill"
+          type="button"
+          :aria-expanded="settingsOpen"
+          @click="showSettings(!settingsOpen)"
+        >
+          <Settings :size="18" />设置
         </button>
         <label class="mail" title="添加文件或图片"
           ><Mail :size="21" /><input
@@ -385,6 +416,57 @@ onBeforeUnmount(() => {
   display: block;
   width: 100%;
   pointer-events: none;
+}
+.reminder-count {
+  position: absolute;
+  top: 5px;
+  right: 2px;
+  min-width: 21px;
+  padding: 2px 4px;
+  border-radius: 12px;
+  background: #f4e7cc;
+  color: #715020;
+  font-weight: 700;
+}
+.orb-panel .mode-badge {
+  padding: 3px 9px;
+  border-radius: 12px;
+  color: #31634f;
+  background: #e5f2e9;
+}
+.orb-panel .mode-badge[data-mode='SCHOLAR'] {
+  color: #355e82;
+  background: #e7eff8;
+}
+.orb-panel .mode-badge[data-mode='STRICT'] {
+  color: #785321;
+  background: #f7eddb;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .orb[data-study-motion='SCHOLAR'] svg {
+    animation: study-guide 0.55s ease;
+  }
+  .orb[data-study-motion='GENTLE'] svg {
+    animation: study-nod 0.55s ease;
+  }
+  .orb[data-study-motion='STRICT'] svg {
+    animation: study-prompt 0.55s ease;
+  }
+}
+@keyframes study-guide {
+  45% {
+    transform: translateX(-4px) rotate(-7deg);
+  }
+}
+@keyframes study-nod {
+  45% {
+    transform: translateY(3px) scaleY(0.95);
+  }
+}
+@keyframes study-prompt {
+  35% {
+    transform: translateY(-5px);
+  }
 }
 .eyes {
   fill: #69808b;
@@ -534,6 +616,10 @@ onBeforeUnmount(() => {
 }
 .tools {
   gap: 8px;
+  flex-wrap: wrap;
+}
+.tools .pill {
+  flex-shrink: 0;
 }
 .tools .pill {
   border: 1px solid #d0dcf8;
