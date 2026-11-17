@@ -4,6 +4,7 @@ import { questions } from '../data/demo';
 import { useAppStore } from '../stores/app';
 import { useStudyStore } from '../stores/study';
 import { gradeQuestions, remainingSeconds } from '../domain/logic';
+import { useClickGuard } from '../composables/useClickGuard';
 import AppIcon from '../components/AppIcon.vue';
 import LiveUnavailable from '../components/LiveUnavailable.vue';
 const app = useAppStore();
@@ -58,6 +59,9 @@ function submit(auto = false) {
   });
   app.notify(auto ? '考试时间结束，已自动交卷。' : '演示试卷已交卷并完成客观题评分。');
 }
+// 连点保护：800ms 内的重复点击直接忽略，首次点击立即生效
+const startGuard = useClickGuard(() => start(), { cooldown: 800 });
+const submitGuard = useClickGuard(() => submit(), { cooldown: 800 });
 function choose(value: number) {
   if (!session.value || session.value.submittedAt) return;
   if (remainingSeconds(session.value) === 0) {
@@ -100,7 +104,7 @@ onBeforeUnmount(() => {
         综合卷共 12 题，每科 3 题。演示评分按正确比例折算为 100
         分，不代表真实考研科目分值或预测总分。
       </p>
-      <form class="space-top" @submit.prevent="start">
+      <form class="space-top" @submit.prevent="startGuard.trigger()">
         <div class="form-grid">
           <label class="field"
             >试卷科目<select v-model="subject">
@@ -176,7 +180,7 @@ onBeforeUnmount(() => {
           </button>
         </div>
         <p class="muted small space-top">蓝色表示已作答。提交前检查未答题。</p>
-        <button class="btn stretch space-top" @click="submit()">提交试卷</button>
+        <button class="btn stretch space-top" @click="submitGuard.trigger()">提交试卷</button>
       </section>
     </div>
     <template v-else
