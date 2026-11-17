@@ -447,23 +447,23 @@ onBeforeUnmount(() => {
   display: none;
 }
 .supervision {
-  --accent: #31634f;
-  --tint: #e5f2e9;
+  --accent: #4f46e5;
+  --tint: #EEF2FF;
 }
 .supervision[data-mode='SCHOLAR'] {
-  --accent: #355e82;
-  --tint: #e7eff8;
+  --accent: #4F46E5;
+  --tint: #EEF2FF;
 }
 .supervision[data-mode='STRICT'] {
-  --accent: #785321;
-  --tint: #f7eddb;
+  --accent: #92400E;
+  --tint: #FEF3C7;
 }
 .study-card {
   display: grid;
   gap: 8px;
   padding: 12px;
-  background: #f9fbfa;
-  border: 1px solid #dce8e3;
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
   border-radius: 14px;
 }
 .study-card p {
@@ -499,10 +499,10 @@ onBeforeUnmount(() => {
   gap: 4px;
   padding: 5px 8px;
   min-height: 32px;
-  border: 1px solid #cbdad4;
+  border: 1px solid #E2E8F0;
   border-radius: 8px;
   background: white;
-  color: #233c46;
+  color: #1F2937;
   cursor: pointer;
   font: inherit;
   font-size: 13px;
@@ -523,7 +523,7 @@ onBeforeUnmount(() => {
 }
 .study-card li {
   padding: 7px 0;
-  border-top: 1px solid #dce8e3;
+  border-top: 1px solid #E5E7EB;
 }
 .study-card input {
   max-width: 100%;
@@ -531,6 +531,6 @@ onBeforeUnmount(() => {
 }
 .study-error {
   margin: 0;
-  color: #8a3d34;
+  color: #991B1B;
 }
 </style>

@@ -132,12 +132,12 @@ function transition() {
 </template>
 
 <style scoped>
-.task-card { padding: 16px 0; border-bottom: 1px solid #edf1ee; overflow-wrap: anywhere; }
-.task-card.linked { border-radius: 8px; box-shadow: 0 0 0 2px #83b7a3; padding-inline: 12px; }
+.task-card { padding: 16px 0; border-bottom: 1px solid #F9FAFB; overflow-wrap: anywhere; }
+.task-card.linked { border-radius: 8px; box-shadow: 0 0 0 2px #a5b4fc; padding-inline: 12px; }
 .task-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .task-heading h3 { margin: 0; }
 .task-card label { display: grid; gap: 8px; margin: 14px 0; }
-.task-card input, .task-card textarea { width: 100%; padding: 10px 12px; border: 1px solid #d3dfd8; border-radius: 9px; font: inherit; }
+.task-card input, .task-card textarea { width: 100%; padding: 10px 12px; border: 1px solid #CBD5E1; border-radius: 9px; font: inherit; }
 .task-card details { margin: 10px 0; }
 .task-card summary { cursor: pointer; }
 .task-actions { display: flex; flex-wrap: wrap; gap: 8px; }

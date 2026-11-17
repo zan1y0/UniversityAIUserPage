@@ -52,8 +52,38 @@ function reset() {
 onBeforeUnmount(stop);
 </script>
 <template>
-  <div class="split">
-    <div class="stack">
+  <section class="dash-strip">
+    <div class="strip-left">
+      <strong>陪伴督学</strong>
+      <span class="strip-dot">·</span>
+      <span>{{ mode }}模式 · 研小途陪你一起学</span>
+    </div>
+    <span class="strip-right">{{ study.checkedIn ? '今日已打卡' : '今天还没有打卡' }}</span>
+  </section>
+  <div class="dash-kpi">
+    <div class="dash-kpi-item">
+      <p>陪伴模式</p>
+      <b class="dash-kpi-word">{{ mode }}</b>
+      <span>学霸 / 温柔 / 严管</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>累计打卡</p>
+      <b>{{ study.state.checkins.length }}<small>天</small></b>
+      <span>{{ study.checkedIn ? '今日已记录' : '今天还待记录' }}</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>待完成任务</p>
+      <b>{{ study.state.plan ? study.state.plan.tasks.filter((t) => !t.done).length : 0 }}<small>项</small></b>
+      <span>{{ study.state.plan ? '来自当前学习计划' : '还没有学习计划' }}</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>本轮专注</p>
+      <b>{{ display }}</b>
+      <span>完成 25 分钟才计入</span>
+    </div>
+  </div>
+  <div class="dash-body">
+    <div class="dash-main">
       <ChatPanel
         purpose="陪伴督学"
         greeting="你好，我是研小途。今天想先完成什么小目标？"
@@ -90,7 +120,7 @@ onBeforeUnmount(stop);
         </div>
       </section>
     </div>
-    <div class="stack">
+    <aside class="dash-rail">
       <section class="card">
         <div class="card-heading">
           <h2>研小途</h2>
@@ -174,6 +204,6 @@ onBeforeUnmount(stop);
           </p></template
         ><LiveUnavailable v-else capability="专注事件记录" />
       </section>
-    </div>
+    </aside>
   </div>
 </template>

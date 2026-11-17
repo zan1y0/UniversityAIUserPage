@@ -33,6 +33,7 @@ const questions = computed(() =>
           '如果得到与预期不同的结果，你会如何验证？',
         ],
 );
+const practice = computed(() => ['专业问答', '英语口语', '压力面试'].includes(mode.value));
 function buildIntro() {
   if (app.mode === 'live') {
     app.notify('自我介绍生成尚未提供结构化接口，可在对话中请求辅助');
@@ -56,33 +57,65 @@ function changeMode(value: string) {
 }
 </script>
 <template>
-  <div class="tabs">
-    <button
-      v-for="m in ['专业问答', '英语口语', '压力面试', '自我介绍', '礼仪与流程']"
-      :key="m"
-      class="tab"
-      :class="{ active: mode === m }"
-      @click="changeMode(m)"
-    >
-      {{ m }}
-    </button>
+  <section class="dash-strip">
+    <div class="strip-left">
+      <strong>复试训练</strong>
+      <span class="strip-dot">·</span>
+      <span>{{ mode }}{{ practice ? ` · 第 ${step + 1} 问` : '' }}</span>
+    </div>
+    <span class="strip-right">{{ practice ? `${questions.length} 个练习问题` : '表达与流程' }}</span>
+  </section>
+
+  <div class="dash-kpi">
+    <div class="dash-kpi-item">
+      <p>训练模式</p>
+      <b class="dash-kpi-word">{{ mode }}</b>
+      <span>共 5 种模式</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>{{ practice ? '练习题' : '当前视图' }}</p>
+      <b>{{ practice ? questions.length : '—' }}<small v-if="practice">问</small></b>
+      <span>{{ practice ? '可循环练习' : '表达与礼仪' }}</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>本次回答</p>
+      <b>{{ answer.trim().length }}<small>字</small></b>
+      <span>{{ feedback ? '已完成本地检查' : '可用语音或文字' }}</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>评分口径</p>
+      <b class="dash-kpi-word">本地检查</b>
+      <span>不提供虚构评分</span>
+    </div>
   </div>
-  <template v-if="['专业问答', '英语口语', '压力面试'].includes(mode)"
-    ><div class="split">
-      <div class="stack">
+
+  <div class="dash-body">
+    <div class="dash-main">
+      <template v-if="practice">
         <section class="card">
           <div class="card-heading">
             <h2>{{ mode }} · 练习 {{ step + 1 }}</h2>
-            <span class="tag">表达与思考</span>
+            <div class="seg" role="group" aria-label="复试训练模式">
+              <button
+                v-for="m in ['专业问答', '英语口语', '压力面试', '自我介绍', '礼仪与流程']"
+                :key="m"
+                class="seg-item"
+                :class="{ active: mode === m }"
+                @click="changeMode(m)"
+              >
+                {{ m }}
+              </button>
+            </div>
           </div>
           <div class="interview-prompt">{{ questions[step] }}</div>
-          <div class="row wrap">
+          <div class="form-actions">
             <button
               class="btn secondary"
               @click="speech.speak(questions[step]!, mode === '英语口语' ? 'en-US' : 'zh-CN')"
             >
-              <AppIcon name="volume" :size="16" />朗读问题</button
-            ><button
+              <AppIcon name="volume" :size="15" />朗读问题</button
+            >
+            <button
               class="btn secondary"
               @click="
                 step = (step + 1) % questions.length;
@@ -101,21 +134,17 @@ function changeMode(value: string) {
               placeholder="先组织观点，再用一个具体例子展开。"
             ></textarea>
           </label>
-          <div class="row wrap space-top">
+          <div class="form-actions">
             <button
               class="btn secondary"
               @click="speech.listen(mode === '英语口语' ? 'en-US' : 'zh-CN')"
             >
-              <AppIcon name="mic" :size="16" />{{
-                speech.listening.value ? '停止录音' : '语音回答'
-              }}</button
-            ><button
-              class="btn"
-              :disabled="!answer.trim() || app.mode === 'live'"
-              @click="evaluate"
+              <AppIcon name="mic" :size="15" />{{ speech.listening.value ? '停止录音' : '语音回答' }}</button
             >
+            <button class="btn" :disabled="!answer.trim() || app.mode === 'live'" @click="evaluate">
               本地表达检查</button
-            ><button
+            >
+            <button
               v-if="speech.listening.value || speech.speaking.value"
               class="text-btn"
               @click="speech.stop"
@@ -123,7 +152,7 @@ function changeMode(value: string) {
               停止采集与播放
             </button>
           </div>
-          <p class="muted small space-top">
+          <p class="muted small">
             语音转写由浏览器提供，可能使用服务商网络；不会保存音频。专业评分与发音评价需后端 ASR
             和评分服务。
           </p>
@@ -146,81 +175,120 @@ function changeMode(value: string) {
               : ['我想练习开场介绍', '怎样组织专业问题的回答？']
           "
         />
-      </div>
-      <section class="card" style="align-self: start">
-        <h2>从容表达的小步骤</h2>
-        <ul class="point-list">
+      </template>
+
+      <section v-else-if="mode === '自我介绍'" class="card">
+        <div class="card-heading">
+          <h2>搭建英文自我介绍</h2>
+          <div class="seg" role="group" aria-label="复试训练模式">
+            <button
+              v-for="m in ['专业问答', '英语口语', '压力面试', '自我介绍', '礼仪与流程']"
+              :key="m"
+              class="seg-item"
+              :class="{ active: mode === m }"
+              @click="changeMode(m)"
+            >
+              {{ m }}
+            </button>
+          </div>
+        </div>
+        <form class="dash-toolbar intro-toolbar" @submit.prevent="buildIntro">
+          <label class="field"
+            >姓名（英文）<input v-model="name" maxlength="50" placeholder="例如 your English name"
+          /></label>
+          <label class="field"
+            >专业 / 研究兴趣（英文）<input
+              v-model="major"
+              maxlength="100"
+              placeholder="例如 computer science"
+          /></label>
+        </form>
+        <label class="field space-top"
+          >相关经历（英文动词短语）<textarea
+            v-model="experience"
+            maxlength="500"
+            placeholder="例如 developed a small application with my classmates"
+          ></textarea>
+        </label>
+        <button class="btn space-top" @click="buildIntro">生成本地模板</button>
+        <div v-if="introduction" class="answer-feedback">
+          <p class="reading">{{ introduction }}</p>
+          <button class="text-btn space-top" @click="speech.speak(introduction, 'en-US')">
+            练习朗读
+          </button>
+        </div>
+        <p class="muted small space-top">该模板是可编辑的前端示例，输入只在当前页面内存中保留。</p>
+      </section>
+
+      <section v-else class="card">
+        <div class="card-heading">
+          <h2>礼仪与流程</h2>
+          <div class="seg" role="group" aria-label="复试训练模式">
+            <button
+              v-for="m in ['专业问答', '英语口语', '压力面试', '自我介绍', '礼仪与流程']"
+              :key="m"
+              class="seg-item"
+              :class="{ active: mode === m }"
+              @click="changeMode(m)"
+            >
+              {{ m }}
+            </button>
+          </div>
+        </div>
+        <div class="dash-list">
+          <div
+            v-for="item in [
+              {
+                title: '进入面试',
+                points: [
+                  '提前核对设备或到场路线',
+                  '简洁问候，遵循老师安排',
+                  '保持自然坐姿与适度目光交流',
+                ],
+              },
+              {
+                title: '交流过程',
+                points: ['完整听完问题再回答', '观点与实例相结合', '不理解时礼貌请求澄清'],
+              },
+              {
+                title: '结束面试',
+                points: ['按要求补充必要信息', '表达感谢，平稳结束', '及时复盘可改进之处'],
+              },
+            ]"
+            :key="item.title"
+            class="dash-row step-row"
+          >
+            <span class="course-idx"><AppIcon name="mic" :size="14" /></span>
+            <div class="dash-row-main">
+              <div class="dash-row-title">{{ item.title }}</div>
+              <p class="dash-row-meta">{{ item.points.join(' · ') }}</p>
+            </div>
+          </div>
+        </div>
+        <p class="muted small">具体安排以目标院校复试通知为准。</p>
+      </section>
+    </div>
+
+    <aside class="dash-rail">
+      <section class="card">
+        <div class="card-heading">
+          <h2>从容表达的小步骤</h2>
+          <AppIcon name="mic" :size="15" />
+        </div>
+        <ol class="rail-steps">
           <li>听清问题，必要时确认范围</li>
           <li>先说核心观点，再说明依据</li>
           <li>不确定的内容坦诚说明</li>
           <li>压力问题先稳定节奏</li>
           <li>结束时用一句话总结</li>
-        </ul>
+        </ol>
         <p class="muted small">当前为训练辅助，不代表正式复试题库或录取评价。</p>
       </section>
-    </div></template
-  >
-  <section v-else-if="mode === '自我介绍'" class="card">
-    <h2>搭建英文自我介绍</h2>
-    <form class="space-top" @submit.prevent="buildIntro">
-      <div class="form-grid">
-        <label class="field"
-          >姓名（英文）<input
-            v-model="name"
-            maxlength="50"
-            placeholder="例如 your English name" /></label
-        ><label class="field"
-          >专业 / 研究兴趣（英文）<input
-            v-model="major"
-            maxlength="100"
-            placeholder="例如 computer science"
-        /></label>
-      </div>
-      <label class="field space-top"
-        >相关经历（英文动词短语）<textarea
-          v-model="experience"
-          maxlength="500"
-          placeholder="例如 developed a small application with my classmates"
-        ></textarea></label
-      ><button class="btn space-top">生成本地模板</button>
-    </form>
-    <div v-if="introduction" class="answer-feedback">
-      <p class="reading">{{ introduction }}</p>
-      <button class="text-btn space-top" @click="speech.speak(introduction, 'en-US')">
-        练习朗读
-      </button>
-    </div>
-    <p class="muted small space-top">该模板是可编辑的前端示例，输入只在当前页面内存中保留。</p>
-  </section>
-  <div v-else class="grid three">
-    <section
-      v-for="item in [
-        {
-          title: '进入面试',
-          points: [
-            '提前核对设备或到场路线',
-            '简洁问候，遵循老师安排',
-            '保持自然坐姿与适度目光交流',
-          ],
-        },
-        {
-          title: '交流过程',
-          points: ['完整听完问题再回答', '观点与实例相结合', '不理解时礼貌请求澄清'],
-        },
-        {
-          title: '结束面试',
-          points: ['按要求补充必要信息', '表达感谢，平稳结束', '及时复盘可改进之处'],
-        },
-      ]"
-      :key="item.title"
-      class="card"
-    >
-      <span class="module-icon"><AppIcon name="mic" /></span>
-      <h2>{{ item.title }}</h2>
-      <ul class="point-list">
-        <li v-for="p in item.points" :key="p">{{ p }}</li>
-      </ul>
-      <p class="muted small">具体安排以目标院校复试通知为准。</p>
-    </section>
+      <section class="card">
+        <div class="card-heading"><h2>下一步</h2></div>
+        <p class="muted small">练完表达，回到专业课与英语的输入更重要。</p>
+        <RouterLink to="/public-courses" class="btn secondary stretch">去公共课学习</RouterLink>
+      </section>
+    </aside>
   </div>
 </template>

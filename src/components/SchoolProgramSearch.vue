@@ -185,11 +185,11 @@ onBeforeUnmount(() => lifetime.abort());
 }
 .program-table :is(th, td) {
   padding: 12px 10px;
-  border-bottom: 1px solid #e1ebe6;
+  border-bottom: 1px solid #F3F4F6;
   vertical-align: top;
 }
 .program-table thead {
-  background: #edf5f0;
+  background: #EEF2FF;
 }
 .program-table small {
   display: block;

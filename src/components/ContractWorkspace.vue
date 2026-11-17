@@ -34,7 +34,20 @@ const moduleMap: Record<string, string> = {
   '/news': 'M11',
 };
 const moduleId = computed(() => moduleMap[route.path]);
-const inlineLearningResults = computed(() =>
+const moduleTitles: Record<string, string> = {
+  M01: '陪伴督学',
+  M02: '智能择校',
+  M03: '公共课学习',
+  M04: '专业课学习',
+  M05: 'AI 答疑',
+  M06: '刷题与错题',
+  M07: '学习计划',
+  M08: '模考与估分',
+  M09: '复试训练',
+  M10: '学习数据',
+  M11: '资讯与政策',
+};
+const moduleName = computed(() => moduleTitles[moduleId.value || ''] || '学习空间');const inlineLearningResults = computed(() =>
   ['M03', 'M04', 'M05', 'M06', 'M07', 'M08', 'M09', 'M11'].includes(moduleId.value || ''),
 );
 const actionIds = computed(() =>
@@ -51,6 +64,7 @@ const extras = computed(() =>
       ? (['op006', 'op007', 'op008'] as OperationId[])
       : [],
 );
+const opCount = computed(() => actionIds.value.length + extras.value.length);
 const active = ref<OperationId>(moduleId.value === 'M02' ? 'op019' : 'op072');
 const form = ref<Input>({});
 const op = computed(() => operations[active.value]!);
@@ -172,8 +186,8 @@ const curveOption = computed(() => {
         type: 'line',
         data: curve.map((v) => v.studyMinutes),
         smooth: true,
-        areaStyle: { color: '#e1f0e7' },
-        color: '#258d76',
+        areaStyle: { color: '#EEF2FF' },
+        color: '#6366F1',
       },
     ],
   };
@@ -193,7 +207,7 @@ const radarOption = computed(() => {
         type: 'radar',
         data: [{ value: items.map((v) => Number(v.mastery) * 100), name: '掌握程度' }],
         areaStyle: { opacity: 0.18 },
-        color: '#258d76',
+        color: '#6366F1',
       },
     ],
   };
@@ -692,7 +706,31 @@ onBeforeUnmount(() => {
 </script>
 <template>
   <div class="contract-workspace">
-    <ChatPanel
+  <section class="dash-strip">
+    <div class="strip-left">
+      <strong>{{ moduleName }}</strong>
+      <span class="strip-dot">·</span>
+      <span>{{ buttonTitle(active) }}</span>
+    </div>
+    <span class="strip-right">{{ opCount }} 个可用操作 · 真实接口</span>
+  </section>
+  <div class="dash-kpi three">
+    <div class="dash-kpi-item">
+      <p>当前模块</p>
+      <b class="dash-kpi-word">{{ moduleName }}</b>
+      <span>{{ opCount }} 个契约操作</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>当前操作</p>
+      <b class="dash-kpi-word">{{ buttonTitle(active) }}</b>
+      <span>{{ initializing ? '正在载入学习资料' : '可随时切换' }}</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>登录身份</p>
+      <b class="dash-kpi-word">{{ app.user?.activeRole || '—' }}</b>
+      <span>{{ app.user?.nickname || '未登录' }}</span>
+    </div>
+  </div>    <ChatPanel
       v-if="moduleId === 'M01'"
       purpose="陪伴督学"
       greeting="你好，我是研小途。今天想先完成什么小目标？"
@@ -905,7 +943,6 @@ onBeforeUnmount(() => {
         />
       </section>
       <section
-        v-if="!inlineLearningResults || response !== undefined || transient"
         class="card contract-output"
         :aria-label="inlineLearningResults ? '操作结果' : '学习内容与结果'"
       >

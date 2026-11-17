@@ -547,11 +547,11 @@ async function submit() {
 }
 .result-scroll :is(th, td) {
   padding: 12px 10px;
-  border-bottom: 1px solid #e1ebe6;
+  border-bottom: 1px solid #F3F4F6;
   vertical-align: top;
 }
 .result-scroll thead {
-  background: #edf5f0;
+  background: #EEF2FF;
 }
 .result-scroll small {
   display: block;

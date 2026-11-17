@@ -48,29 +48,64 @@ function remove() {
 onBeforeUnmount(remove);
 </script>
 <template>
-  <div class="split">
-    <div class="stack">
+  <section class="dash-strip">
+    <div class="strip-left">
+      <strong>{{ subject }} · 引导式答疑</strong>
+      <span class="strip-dot">·</span>
+      <span>先讲思路，再给方法</span>
+    </div>
+    <span class="strip-right">{{ confirmed ? '题干已确认' : preview ? '待确认题干' : '尚未附题' }}</span>
+  </section>
+
+  <div class="dash-kpi">
+    <div class="dash-kpi-item">
+      <p>答疑科目</p>
+      <b class="dash-kpi-word">{{ subject }}</b>
+      <span>可随时切换</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>题目附件</p>
+      <b class="dash-kpi-word">{{ preview ? filename || '已上传' : '无' }}</b>
+      <span>{{ preview ? '仅在本机预览' : '可选 JPG / PNG / WebP' }}</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>题干文字</p>
+      <b class="dash-kpi-word">{{ confirmed ? '已确认' : recognized ? '待确认' : '未录入' }}</b>
+      <span>{{ recognized.length }} / 4000 字</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>回答方式</p>
+      <b class="dash-kpi-word">引导式</b>
+      <span>不直接给最终答案</span>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <div class="dash-main">
       <section class="card">
         <div class="card-heading">
           <h2>把问题说清楚</h2>
           <span class="tag">思路优先</span>
         </div>
-        <div class="row wrap">
+        <div class="dash-toolbar qa-toolbar">
           <label class="field"
             >答疑科目<select v-model="subject">
               <option v-for="s in ['数学', '英语', '政治', '专业课']" :key="s">{{ s }}</option>
             </select></label
-          ><label class="upload-label"
-            ><AppIcon name="upload" :size="17" />上传题目图片<input
+          >
+          <label class="upload-label"
+            ><AppIcon name="upload" :size="16" />上传题目图片<input
               class="sr-only"
               type="file"
               accept="image/jpeg,image/png,image/webp"
               aria-label="上传题目图片"
-              @change="upload" /></label
-          ><span class="muted small">JPG / PNG / WebP · 最大 10MB</span>
+              @change="upload"
+            /></label
+          >
+          <span class="muted small">JPG / PNG / WebP · 最大 10MB</span>
         </div>
         <p v-if="error" class="inline-error" role="alert">{{ error }}</p>
-        <div v-if="preview" class="space-top">
+        <div v-if="preview" class="qa-attach">
           <div class="attachment">
             <img :src="preview" alt="待提问题目的本地预览" />
             <div>
@@ -79,7 +114,7 @@ onBeforeUnmount(remove);
               <button class="text-btn" @click="remove">移除图片</button>
             </div>
           </div>
-          <div class="notice">
+          <div class="dash-notice">
             演示模式只在本机预览图片，请自行录入并核对题干。真实模式使用图片上传、识别与人工确认流程；图片识别不等于直接获取答案。
           </div>
           <label class="field"
@@ -88,9 +123,10 @@ onBeforeUnmount(remove);
               maxlength="4000"
               placeholder="请录入图片中的题目，核对公式、选项与已知条件"
               @input="confirmed = false"
-            ></textarea></label
-          ><button
-            class="btn secondary space-top"
+            ></textarea>
+          </label>
+          <button
+            class="btn secondary"
             :disabled="!recognized.trim()"
             @click="
               confirmed = true;
@@ -108,30 +144,33 @@ onBeforeUnmount(remove);
         :context="`科目：${subject}。不要直接给最终答案，优先提供思路、步骤和方法。${confirmed ? `用户确认的题目文字：${recognized}` : ''}`"
       />
     </div>
-    <div class="stack">
+
+    <aside class="dash-rail">
       <section class="card">
-        <span class="module-icon"><AppIcon name="sparkles" /></span>
-        <h2>从思路到理解</h2>
-        <ul class="point-list">
+        <div class="card-heading">
+          <h2>从思路到理解</h2>
+          <AppIcon name="sparkles" :size="15" />
+        </div>
+        <ol class="rail-steps">
           <li>描述题目条件与目标</li>
           <li>说出你已经尝试的方法</li>
           <li>追问卡住的具体步骤</li>
           <li>用类似问题检验理解</li>
-        </ul>
+        </ol>
         <p class="muted small">
-          真实 AI
-          内容可能出错，请核对公式与依据；真实模式按返回的来源核验，演示模式不会伪造资料出处。
+          真实 AI 内容可能出错，请核对公式与依据；真实模式按返回的来源核验，演示模式不会伪造资料出处。
         </p>
       </section>
       <section class="card">
-        <h2>答疑后的下一步</h2>
-        <p class="muted small space-top">
+        <div class="card-heading"><h2>答疑之后的下一步</h2></div>
+        <p class="muted small">
           理解一个方法，再用练习巩固。把易错点沉淀下来，下一次就更有把握。
         </p>
-        <RouterLink to="/practice" class="btn secondary stretch space-top"
-          >前往专项训练<AppIcon name="arrow" :size="15"
+        <RouterLink to="/practice" class="btn stretch"
+          >前往专项训练<AppIcon name="arrow" :size="14"
         /></RouterLink>
+        <RouterLink to="/planning" class="btn secondary stretch space-top">回到学习计划</RouterLink>
       </section>
-    </div>
+    </aside>
   </div>
 </template>

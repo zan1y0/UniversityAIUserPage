@@ -29,28 +29,39 @@ function complete() {
 <template>
   <LiveUnavailable v-if="app.mode === 'live'" capability="课程资料、进度与知识讲解" /><template
     v-else
-    ><div class="grid three">
-      <article v-for="u in units" :key="u.id" class="card course-card">
-        <div class="row between">
-          <span class="module-icon"><AppIcon name="book" /></span
-          ><span class="tag" :class="study.state.completedUnits.includes(u.id) ? 'green' : ''">{{
-            study.state.completedUnits.includes(u.id) ? '已学完' : u.tag
-          }}</span>
+  >
+    <div class="course-list">
+      <div
+        v-for="(u, i) in units"
+        :key="u.id"
+        class="course-row"
+        :class="{ active: selected === u.id }"
+      >
+        <span class="course-idx">{{ String(i + 1).padStart(2, '0') }}</span>
+        <div class="course-body">
+          <div class="course-title">
+            <h3>{{ u.title }}</h3>
+            <span class="tag" :class="study.state.completedUnits.includes(u.id) ? 'green' : ''">{{
+              study.state.completedUnits.includes(u.id) ? '已学完' : u.tag
+            }}</span>
+          </div>
+          <p class="course-meta">{{ u.points[0] }} · 预计 {{ u.duration }} 分钟</p>
         </div>
-        <h3>{{ u.title }}</h3>
-        <p class="muted">{{ u.points[0] }} · 预计 {{ u.duration }} 分钟</p>
+        <span class="course-time">{{ u.duration }} 分钟</span>
         <button
-          class="btn secondary"
+          class="btn secondary course-btn"
           @click="
             selected = u.id;
             speech.stop();
           "
         >
-          {{ selected === u.id ? '正在阅读' : '开始学习' }}<AppIcon name="arrow" :size="15" />
+          {{ selected === u.id ? '正在阅读' : study.state.completedUnits.includes(u.id) ? '复习' : '开始学习' }}
+          <AppIcon name="arrow" :size="14" />
         </button>
-      </article>
+      </div>
     </div>
-    <section v-if="unit" class="card section-gap">
+
+    <section v-if="unit" class="card course-reader">
       <div class="card-heading">
         <h2>{{ unit.title }}</h2>
         <button
@@ -67,23 +78,21 @@ function complete() {
       <ul class="point-list">
         <li v-for="point in unit.points" :key="point">{{ point }}</li>
       </ul>
-      <div class="row wrap">
-        <button
-          class="btn"
-          :disabled="study.state.completedUnits.includes(unit.id)"
-          @click="complete"
-        >
-          <AppIcon name="check" :size="16" />{{
+      <div class="form-actions">
+        <button class="btn" :disabled="study.state.completedUnits.includes(unit.id)" @click="complete">
+          <AppIcon name="check" :size="15" />{{
             study.state.completedUnits.includes(unit.id) ? '已完成学习' : '标记已学完'
           }}</button
-        ><button
+        >
+        <button
           class="btn secondary"
           @click="speech.speaking.value ? speech.stop() : speech.speak(unit.content)"
         >
-          <AppIcon name="volume" :size="16" />{{
+          <AppIcon name="volume" :size="15" />{{
             speech.speaking.value ? '停止朗读' : '带读讲解'
           }}</button
-        ><RouterLink
+        >
+        <RouterLink
           class="btn secondary"
           :to="{ path: '/qa', query: { question: `请引导我理解${unit.title}` } }"
           >继续提问</RouterLink
@@ -93,6 +102,6 @@ function complete() {
       <p class="muted small space-top">
         学习资料为前端演示内容，完成后只记录本地示例进度。实际考纲、真题与参考书应以授权资料为准。
       </p>
-    </section></template
-  >
+    </section>
+  </template>
 </template>

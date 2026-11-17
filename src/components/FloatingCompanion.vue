@@ -250,22 +250,22 @@ onBeforeUnmount(() => {
       <defs>
         <radialGradient id="shell" cx=".32" cy=".22" r=".85">
           <stop stop-color="white" />
-          <stop offset=".5" stop-color="#e6e9f1" />
-          <stop offset=".78" stop-color="#a8a9b4" />
-          <stop offset="1" stop-color="#595965" />
+          <stop offset=".5" stop-color="#F3F4F6" />
+          <stop offset=".78" stop-color="#9CA3AF" />
+          <stop offset="1" stop-color="#4B5563" />
         </radialGradient>
         <linearGradient id="visor" x2=".8" y2="1">
-          <stop stop-color="#57759b" />
-          <stop offset=".4" stop-color="#152944" />
+          <stop stop-color="#6366F1" />
+          <stop offset=".4" stop-color="#111827" />
           <stop offset="1" stop-color="#091123" />
         </linearGradient>
       </defs>
       <circle cx="60" cy="60" r="54" fill="url(#shell)" stroke="#9da6b2" />
-      <path d="M39 14 Q55 9 73 15 L66 21 Q53 23 39 20Z" fill="#bcc3cf" stroke="#7de7ec" />
+      <path d="M39 14 Q55 9 73 15 L66 21 Q53 23 39 20Z" fill="#D1D5DB" stroke="#7de7ec" />
       <path
         d="M13 45 Q22 23 55 25 Q82 26 94 49 Q107 77 81 89 Q53 103 24 85 Q5 73 13 45Z"
         fill="url(#visor)"
-        stroke="#676a72"
+        stroke="#6B7280"
         stroke-width="2"
       />
       <path d="M20 48 Q28 31 47 31" fill="none" stroke="#b8d4ee" opacity=".45" stroke-width="3" />
@@ -280,8 +280,8 @@ onBeforeUnmount(() => {
         stroke-width="2.5"
         stroke-linecap="round"
       />
-      <ellipse cx="101" cy="67" rx="12" ry="20" fill="url(#shell)" stroke="#6e727a" />
-      <ellipse cx="102" cy="67" rx="8" ry="15" fill="#8a909a" stroke="#88f5ff" stroke-width="2" />
+      <ellipse cx="101" cy="67" rx="12" ry="20" fill="url(#shell)" stroke="#6B7280" />
+      <ellipse cx="102" cy="67" rx="8" ry="15" fill="#6B7280" stroke="#88f5ff" stroke-width="2" />
       <path d="M42 104 Q64 112 84 98" fill="none" stroke="#8af8ff" />
     </svg>
     <span v-if="reminderCount" class="reminder-count" aria-hidden="true">{{ reminderCount }}</span>
@@ -424,23 +424,23 @@ onBeforeUnmount(() => {
   min-width: 21px;
   padding: 2px 4px;
   border-radius: 12px;
-  background: #f4e7cc;
-  color: #715020;
+  background: #FEF3C7;
+  color: #92400E;
   font-weight: 700;
 }
 .orb-panel .mode-badge {
   padding: 3px 9px;
   border-radius: 12px;
-  color: #31634f;
-  background: #e5f2e9;
+  color: #4338ca;
+  background: #EEF2FF;
 }
 .orb-panel .mode-badge[data-mode='SCHOLAR'] {
-  color: #355e82;
-  background: #e7eff8;
+  color: #4F46E5;
+  background: #EEF2FF;
 }
 .orb-panel .mode-badge[data-mode='STRICT'] {
-  color: #785321;
-  background: #f7eddb;
+  color: #92400E;
+  background: #FEF3C7;
 }
 @media (prefers-reduced-motion: no-preference) {
   .orb[data-study-motion='SCHOLAR'] svg {
@@ -469,12 +469,12 @@ onBeforeUnmount(() => {
   }
 }
 .eyes {
-  fill: #69808b;
+  fill: #6B7280;
   transform-box: fill-box;
   transform-origin: center;
 }
 .smile {
-  stroke: #7097a5;
+  stroke: #6B7280;
 }
 .awake .eyes {
   fill: #69fbff;
@@ -501,8 +501,8 @@ onBeforeUnmount(() => {
   flex-direction: column;
   overflow: auto;
   background: #fff;
-  color: #22364a;
-  border: 1px solid #d7e2e9;
+  color: #1F2937;
+  border: 1px solid #E5E7EB;
   border-radius: 24px;
   box-shadow: 0 16px 64px #223a5a26;
   font-size: 15px;
@@ -518,7 +518,7 @@ onBeforeUnmount(() => {
 .orb-panel header {
   gap: 10px;
   padding: 18px 22px;
-  border-bottom: 1px solid #edf1f4;
+  border-bottom: 1px solid #F3F4F6;
 }
 .dot {
   width: 9px;
@@ -527,7 +527,7 @@ onBeforeUnmount(() => {
   border-radius: 50%;
 }
 .orb-panel small {
-  color: #627382;
+  color: #4B5563;
 }
 .orb-panel button,
 .mail {
@@ -560,7 +560,7 @@ onBeforeUnmount(() => {
 }
 .welcome {
   margin: auto;
-  color: #667b8c;
+  color: #6B7280;
 }
 .orb-log article {
   display: flex;
@@ -575,7 +575,7 @@ onBeforeUnmount(() => {
   align-items: flex-end;
 }
 .bubble {
-  background: #f3f6f9;
+  background: #F9FAFB;
   border-radius: 4px 16px 16px;
   padding: 10px 14px;
   line-height: 1.65;
@@ -584,18 +584,18 @@ onBeforeUnmount(() => {
   max-width: 100%;
 }
 .mine .bubble {
-  background: #e8efff;
+  background: #EEF2FF;
   border-radius: 16px 4px 16px 16px;
 }
 .bubble a {
   gap: 6px;
   overflow-wrap: anywhere;
-  color: #345889;
+  color: #4F46E5;
 }
 .composer {
   margin: 8px 16px 16px;
   padding: 14px;
-  border: 1px solid #d9e0e7;
+  border: 1px solid #E5E7EB;
   border-radius: 20px;
   box-shadow: 0 3px 12px #1e345709;
   flex: none;
@@ -612,7 +612,7 @@ onBeforeUnmount(() => {
   padding: 3px 4px 10px;
 }
 .composer:focus-within {
-  border-color: #91acdf;
+  border-color: #C7D2FE;
 }
 .tools {
   gap: 8px;
@@ -622,14 +622,14 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
 }
 .tools .pill {
-  border: 1px solid #d0dcf8;
-  color: #4165ae;
-  background: #f2f6ff;
+  border: 1px solid #E0E7FF;
+  color: #4338CA;
+  background: #EEF2FF;
   border-radius: 24px;
   padding: 7px 12px;
 }
 .tools .pill[aria-pressed='true'] {
-  background: #d4e3ff;
+  background: #E0E7FF;
 }
 .mail {
   position: relative;
@@ -642,10 +642,10 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 .mail:focus-within {
-  outline: 2px solid #698bc4;
+  outline: 2px solid #6366F1;
 }
 .tools .send {
-  background: #587de3;
+  background: #4F46E5;
   color: white;
 }
 .send:disabled {
@@ -658,19 +658,19 @@ onBeforeUnmount(() => {
   overflow-wrap: anywhere;
   font-size: 12px;
   padding: 4px;
-  background: #f3f6fa;
+  background: #F9FAFB;
 }
 .preview video {
   width: 100%;
   max-height: 125px;
-  background: #14202d;
+  background: #111827;
 }
 .preview button {
   display: inline-flex;
 }
 .composer small[role='alert'] {
   display: block;
-  color: #a14140;
+  color: #B91C1C;
   margin-bottom: 8px;
 }
 </style>

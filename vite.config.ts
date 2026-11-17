@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => {
     server: {
       port: 5173,
       strictPort: true,
+      watch: {
+        // 编辑器/工具的临时目录偶尔被 Windows 锁住，会让 watcher 抛 EBUSY 并退出
+        ignored: ['**/*.tmpdir/**', '**/*.tmp'],
+      },
       proxy: {
         '/api/v1': { target: env.API_PROXY_TARGET || 'http://127.0.0.1:8080', changeOrigin: true },
       },

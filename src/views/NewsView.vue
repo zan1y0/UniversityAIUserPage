@@ -24,6 +24,7 @@ const filtered = computed(() =>
       (!followedOnly.value || study.state.followed.includes(n.id)),
   ),
 );
+const important = computed(() => filtered.value.filter((n) => n.important).length);
 async function load() {
   if (app.mode === 'live') {
     list.value = [];
@@ -43,14 +44,46 @@ function follow(id: string) {
 onMounted(load);
 </script>
 <template>
-  <div class="split">
-    <div class="stack">
+  <section class="dash-strip">
+    <div class="strip-left">
+      <strong>资讯与政策</strong>
+      <span class="strip-dot">·</span>
+      <span>重要事项与政策资讯</span>
+    </div>
+    <span class="strip-right">{{ filtered.length }} 条 · 关注 {{ study.state.followed.length }} 项</span>
+  </section>
+
+  <div class="dash-kpi">
+    <div class="dash-kpi-item">
+      <p>当前分类</p>
+      <b class="dash-kpi-word">{{ category }}</b>
+      <span>可切换分类筛选</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>匹配资讯</p>
+      <b>{{ filtered.length }}<small>条</small></b>
+      <span>含关键词「{{ query || '不限' }}」</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>优先核对</p>
+      <b>{{ important }}<small>条</small></b>
+      <span>标注为重要事项</span>
+    </div>
+    <div class="dash-kpi-item">
+      <p>本地关注</p>
+      <b>{{ study.state.followed.length }}<small>项</small></b>
+      <span>仅记在本机</span>
+    </div>
+  </div>
+
+  <div class="dash-body">
+    <div class="dash-main">
       <section class="card">
         <div class="card-heading">
-          <h2>重要事项与政策资讯</h2>
+          <h2>筛选</h2>
           <span class="tag">来源可核验</span>
         </div>
-        <form class="form-grid" @submit.prevent="load">
+        <form class="dash-toolbar news-toolbar" @submit.prevent="load">
           <label class="field"
             >资讯分类<select v-model="category" @change="load">
               <option
@@ -60,88 +93,86 @@ onMounted(load);
                 {{ c }}
               </option>
             </select></label
-          ><label class="field"
+          >
+          <label class="field"
             >搜索标题<input v-model="query" placeholder="输入关键词筛选" maxlength="100"
           /></label>
-        </form>
-        <div class="row between space-top">
           <label class="inline-label"
-            ><input
-              v-model="followedOnly"
-              type="checkbox"
-              :disabled="app.mode === 'live'"
-            />只看本地关注</label
-          ><button class="text-btn" :disabled="status === 'loading'" @click="load">刷新资讯</button>
+            ><input v-model="followedOnly" type="checkbox" :disabled="app.mode === 'live'" />只看本地关注</label
+          >
+          <button class="btn secondary" :disabled="status === 'loading'">
+            <AppIcon name="reset" :size="14" />刷新资讯
+          </button>
+        </form>
+        <AsyncState :status="status" :error="error" @retry="load" />
+      </section>
+
+      <section class="card">
+        <div class="card-heading">
+          <h2>资讯列表</h2>
+          <span class="muted small">按发布时间展示</span>
+        </div>
+        <div v-if="!filtered.length && status !== 'loading'" class="dash-empty">
+          <span class="dash-empty-icon"><AppIcon name="bell" :size="20" /></span>
+          <h3>暂无匹配资讯</h3>
+          <p>试试其他分类或关键词，或者取消「只看本地关注」。</p>
+        </div>
+        <div v-else class="dash-list">
+          <div v-for="n in filtered" :key="n.id" class="news-row">
+            <div class="news-date">{{ n.date }}</div>
+            <div class="news-body">
+              <div class="news-title">
+                <span class="tag" :class="n.important ? 'orange' : ''">{{ n.category }}</span>
+                <h3>{{ n.title }}</h3>
+                <span v-if="n.important" class="tag orange">优先核对</span>
+              </div>
+              <p class="news-meta">来源：{{ n.source }}</p>
+              <p v-if="selected === n.id" class="reading">{{ n.content }}</p>
+              <p v-else class="news-summary">{{ n.content.slice(0, 65) }}…</p>
+            </div>
+            <div class="news-actions">
+              <button class="text-btn" @click="selected = selected === n.id ? null : n.id">
+                {{ selected === n.id ? '收起' : '详情' }}
+              </button>
+              <button class="text-btn" @click="follow(n.id)">
+                <AppIcon name="bell" :size="14" />{{
+                  study.state.followed.includes(n.id) ? '已关注' : '关注'
+                }}
+              </button>
+            </div>
+          </div>
         </div>
       </section>
-      <AsyncState :status="status" :error="error" @retry="load" />
-      <article v-for="n in filtered" :key="n.id" class="card news-card">
-        <span class="news-date"
-          ><AppIcon name="calendar" :size="23" />
-          <p>{{ n.date }}</p></span
-        >
-        <div class="news-body">
-          <div class="row wrap">
-            <span class="tag" :class="n.important ? 'orange' : ''">{{ n.category }}</span
-            ><span v-if="n.important" class="muted small">优先核对</span>
-          </div>
-          <h3>{{ n.title }}</h3>
-          <p>来源：{{ n.source }}</p>
-          <p v-if="selected === n.id" class="reading">{{ n.content }}</p>
-          <p v-else>{{ n.content.slice(0, 65) }}…</p>
-          <div class="row between space-top">
-            <button class="text-btn" @click="selected = selected === n.id ? null : n.id">
-              {{ selected === n.id ? '收起详情' : '查看详情' }}</button
-            ><button class="text-btn" @click="follow(n.id)">
-              <AppIcon name="bell" :size="14" />{{
-                study.state.followed.includes(n.id) ? '已关注 · 取消' : '关注事项'
-              }}
-            </button>
-          </div>
-        </div>
-      </article>
-      <div v-if="!filtered.length && status !== 'loading'" class="state-box">
-        暂无匹配资讯，试试其他分类或关键词。
-      </div>
     </div>
-    <div class="stack">
+
+    <aside class="dash-rail">
       <section class="card">
-        <h2>备考事项清单</h2>
-        <div
-          v-for="(s, i) in [
-            '报名信息核对',
-            '报考点确认材料',
-            '准考证与考场信息',
-            '初试时间与考试用品',
-          ]"
-          :key="s"
-          class="task-row"
-        >
-          <span class="number-badge">{{ i + 1 }}</span>
-          <div class="task-info">
-            <h3>{{ s }}</h3>
-            <p>日期待官方公告确认</p>
-          </div>
+        <div class="card-heading">
+          <h2>备考事项清单</h2>
+          <AppIcon name="calendar" :size="15" />
         </div>
-        <p class="muted small space-top">
-          演示不设置虚构官方日期。真实通知应包含来源、发布时间与版本。
-        </p>
+        <ol class="rail-steps">
+          <li>报名信息核对<em>日期待官方公告</em></li>
+          <li>报考点确认材料<em>日期待官方公告</em></li>
+          <li>准考证与考场信息<em>日期待官方公告</em></li>
+          <li>初试时间与考试用品<em>日期待官方公告</em></li>
+        </ol>
+        <p class="muted small">演示不设置虚构官方日期。真实通知应包含来源、发布时间与版本。</p>
       </section>
       <section class="card">
-        <h2>提醒与订阅</h2>
-        <p class="muted small space-top">
-          本地关注
-          {{ study.state.followed.length }}
+        <div class="card-heading"><h2>提醒与订阅</h2></div>
+        <p class="muted small">
+          本地关注 {{ study.state.followed.length }}
           项演示事项。真实院校更新、政策变化和实时推送需后端轮询或事件通知。
         </p>
         <a
-          class="text-btn space-top"
+          class="btn secondary stretch"
           href="https://yz.chsi.com.cn/"
           target="_blank"
           rel="noopener noreferrer"
-          >前往中国研究生招生信息网<AppIcon name="arrow" :size="14"
+          >研招网<AppIcon name="arrow" :size="14"
         /></a>
       </section>
-    </div>
+    </aside>
   </div>
 </template>

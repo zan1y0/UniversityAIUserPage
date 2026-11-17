@@ -19,7 +19,7 @@ defineProps<{ sources: Source[] }>();
 
 <style scoped>
 a {
-  color: #176751;
+  color: #4338CA;
   text-decoration: underline;
 }
 </style>

@@ -1,8 +1,25 @@
 <script setup lang="ts">
 import { computed, ref, defineAsyncComponent } from 'vue';
+import type { Component } from 'vue';
 import { roleHome } from './domain/auth';
 import { backend } from './api/backend';
 const ContractWorkspace = defineAsyncComponent(() => import('./components/ContractWorkspace.vue'));
+const TeachingLiveView = defineAsyncComponent(() => import('./views/TeachingLiveView.vue'));
+const liveViews: Record<string, Component> = {
+  M01: defineAsyncComponent(() => import('./views/CompanionLiveView.vue')),
+  M02: defineAsyncComponent(() => import('./views/SchoolsLiveView.vue')),
+  M03: defineAsyncComponent(() => import('./views/PublicCoursesLiveView.vue')),
+  M04: defineAsyncComponent(() => import('./views/ProfessionalCoursesLiveView.vue')),
+  M05: defineAsyncComponent(() => import('./views/QaLiveView.vue')),
+  M06: defineAsyncComponent(() => import('./views/PracticeLiveView.vue')),
+  M07: defineAsyncComponent(() => import('./views/PlanningLiveView.vue')),
+  M08: defineAsyncComponent(() => import('./views/ExamsLiveView.vue')),
+  M09: defineAsyncComponent(() => import('./views/InterviewLiveView.vue')),
+  M10: defineAsyncComponent(() => import('./views/DashboardLiveView.vue')),
+  M11: defineAsyncComponent(() => import('./views/NewsLiveView.vue')),
+  T01: TeachingLiveView,
+  T02: TeachingLiveView,
+};
 import { useRoute, useRouter } from 'vue-router';
 import { modules } from './router';
 import { useAppStore } from './stores/app';
@@ -24,6 +41,9 @@ const visibleModules = computed(() =>
   }),
 );
 const current = computed(() => modules.find((m) => m.path === route.path));
+const liveView = computed(() =>
+  app.mode === 'live' && current.value ? liveViews[current.value.module] : undefined,
+);
 function switchMode() {
   app.setMode(app.mode === 'demo' ? 'live' : 'demo');
   router.push(app.mode === 'live' ? '/login' : '/dashboard');
@@ -143,10 +163,10 @@ function resetDemo() {
         <div v-if="study.storageError" class="notice">
           浏览器存储不可用，演示进度仅保留在当前页面会话。
         </div>
-        <ContractWorkspace v-if="app.mode === 'live' && current?.module.startsWith('M')" :key="route.path" /><RouterView
-          v-else
-          :key="`${app.mode}-${route.path}`"
-        />
+        <component :is="liveView" v-if="liveView" :key="`live-${current?.module}-${route.path}`" /><ContractWorkspace
+          v-else-if="app.mode === 'live' && current?.module.startsWith('M')"
+          :key="route.path"
+        /><RouterView v-else :key="`${app.mode}-${route.path}`" />
         <footer class="page-footer">
           <span>研途 AI · 把每一次努力，变成看得见的进步</span
           ><button v-if="app.mode === 'demo'" class="text-btn small" @click="resetDemo">

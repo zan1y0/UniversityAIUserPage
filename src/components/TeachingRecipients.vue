@@ -76,12 +76,12 @@ async function toggleRoster(classId: string) {
 </template>
 
 <style scoped>
-.recipients { padding: 12px; border: 1px solid #d3dfd8; border-radius: 9px; }
+.recipients { padding: 12px; border: 1px solid #CBD5E1; border-radius: 9px; }
 .recipients summary { cursor: pointer; }
-.recipient-class { padding: 10px 0; border-bottom: 1px solid #edf1ee; }
+.recipient-class { padding: 10px 0; border-bottom: 1px solid #F9FAFB; }
 .recipient-class:last-child { border-bottom: 0; padding-bottom: 0; }
 .recipient-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
 .recipients label { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
-.recipients input { width: auto; accent-color: #126f5c; }
+.recipients input { width: auto; accent-color: #4338CA; }
 .roster { display: flex; flex-wrap: wrap; gap: 5px 18px; margin: 8px 0 0 16px; }
 </style>

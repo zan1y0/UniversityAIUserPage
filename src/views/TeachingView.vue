@@ -150,7 +150,36 @@ watch(linkedTask, showLinkedTask);
   <div class="teaching-workspace">
     <p v-if="app.mode !== 'live'" class="notice">教学与指导功能需要登录真实账号。</p>
     <template v-else>
-      <p v-if="error && !classDialogOpen" class="inline-error" role="alert">{{ error }}</p>
+      <section class="dash-strip">
+        <div class="strip-left">
+          <strong>{{ teacher ? '教学与指导' : '我的学习支持' }}</strong>
+          <span class="strip-dot">·</span>
+          <span>{{ teacher ? '班级、学生与任务' : '班级、老师与任务' }}</span>
+        </div>
+        <span class="strip-right">{{ viewedClass ? viewedClass.name : '全部班级' }}</span>
+      </section>
+      <div class="dash-kpi">
+        <div class="dash-kpi-item">
+          <p>班级</p>
+          <b>{{ classes.length }}<small>个</small></b>
+          <span>{{ viewedClass ? '已选 ' + viewedClass.name : '未选择班级' }}</span>
+        </div>
+        <div class="dash-kpi-item">
+          <p>{{ teacher ? '指导学生' : '指导老师' }}</p>
+          <b>{{ teacher ? students.length : teachers.length }}<small>位</small></b>
+          <span>{{ teacher ? '已加入班级' : '可授权或撤销' }}</span>
+        </div>
+        <div class="dash-kpi-item">
+          <p>教学任务</p>
+          <b>{{ visibleTasks.length }}<small>个</small></b>
+          <span>{{ pendingReviewsOnly ? '仅看待批改' : '含已完成' }}</span>
+        </div>
+        <div class="dash-kpi-item">
+          <p>待批改</p>
+          <b>{{ pendingReviews.length }}<small>份</small></b>
+          <span>提交后在此批改</span>
+        </div>
+      </div>      <p v-if="error && !classDialogOpen" class="inline-error" role="alert">{{ error }}</p>
       <p v-if="busy" role="status">正在处理，请稍候…</p>
       <section v-if="has(teacher ? 'teacher:class:manage' : 'student:class:manage')" class="teaching-card">
         <div class="class-toolbar">
@@ -252,31 +281,31 @@ watch(linkedTask, showLinkedTask);
 </template>
 
 <style scoped>
-.teaching-workspace { display: grid; gap: 20px; }
-.teaching-card { padding: 24px; border: 1px solid #e3e9e6; border-radius: 18px; background: white; }
+.teaching-workspace { display: grid; gap: 14px; }
+.teaching-card { padding: 20px; border: 1px solid #E5E7EB; border-radius: 12px; background: #fff; }
 .teaching-card h2 { margin: 0 0 12px; }
 .class-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .class-toolbar h2 { margin: 0 8px 0 0; }
-.class-choice[aria-pressed='true'] { color: #126f5c; border-color: #126f5c; background: #e8f4ef; }
+.class-choice[aria-pressed='true'] { color: #4338CA; border-color: #4338CA; background: #EEF2FF; }
 .class-details { margin-top: 8px; }
-.class-dialog { box-sizing: border-box; width: min(440px, calc(100% - 32px)); padding: 24px; border: 1px solid #d3dfd8; border-radius: 16px; color: inherit; }
+.class-dialog { box-sizing: border-box; width: min(440px, calc(100% - 32px)); padding: 24px; border: 1px solid #CBD5E1; border-radius: 16px; color: inherit; }
 .class-dialog::backdrop { background: rgb(16 37 30 / 42%); }
 .class-dialog-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 18px; }
 
 .teaching-card label { display: grid; gap: 8px; margin: 14px 0; }
-.teaching-card input, .teaching-card select, .teaching-card textarea { width: 100%; padding: 10px 12px; border: 1px solid #d3dfd8; border-radius: 9px; font: inherit; }
+.teaching-card input, .teaching-card select, .teaching-card textarea { width: 100%; padding: 10px 12px; border: 1px solid #CBD5E1; border-radius: 9px; font: inherit; }
 .teaching-card .checkbox-label { display: flex; align-items: center; }
-.checkbox-label input { width: auto; accent-color: #126f5c; }
+.checkbox-label input { width: auto; accent-color: #4338CA; }
 
 .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
-.summary-grid p { padding: 14px; border-radius: 12px; background: #f1f7f3; }
+.summary-grid p { padding: 14px; border-radius: 12px; background: #F9FAFB; }
 .summary-grid strong { display: block; margin-top: 8px; }
 .teacher-row, .tasks-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.teacher-row { padding: 14px 0; border-bottom: 1px solid #edf1ee; }
-.publication { padding: 12px 0; border-bottom: 1px solid #edf1ee; overflow-wrap: anywhere; }
+.teacher-row { padding: 14px 0; border-bottom: 1px solid #F9FAFB; }
+.publication { padding: 12px 0; border-bottom: 1px solid #F9FAFB; overflow-wrap: anywhere; }
 .publication summary { cursor: pointer; padding: 8px 0; }
 .publication > summary span { display: inline-block; margin-left: 12px; font-size: .9rem; }
-.publication-class { margin: 4px 0 4px 12px; padding-left: 12px; border-left: 2px solid #e3e9e6; }
+.publication-class { margin: 4px 0 4px 12px; padding-left: 12px; border-left: 2px solid #E5E7EB; }
 .publication-student { margin-left: 12px; }
 @media (max-width: 600px) { .teaching-card { padding: 16px; } .teacher-row { align-items: flex-start; flex-direction: column; } }
 </style>

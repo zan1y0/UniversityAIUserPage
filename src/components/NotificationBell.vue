@@ -145,17 +145,17 @@ onUnmounted(() => {
 
 <style scoped>
 button.icon-btn.bell-button { position: relative; display: inline-flex; }
-.bell-badge { position: absolute; top: -4px; right: -5px; min-width: 17px; padding: 1px 4px; border-radius: 20px; background: #a33a38; color: white; font-size: 10px; text-align: center; }
-.inbox { box-sizing: border-box; position: fixed; inset: 64px 16px auto auto; margin: 0; width: min(420px, calc(100% - 32px)); max-height: calc(100dvh - 82px); padding: 18px; overflow: auto; border: 1px solid #d3dfd8; border-radius: 16px; color: #223d33; }
+.bell-badge { position: absolute; top: -4px; right: -5px; min-width: 17px; padding: 1px 4px; border-radius: 20px; background: #B91C1C; color: white; font-size: 10px; text-align: center; }
+.inbox { box-sizing: border-box; position: fixed; inset: 64px 16px auto auto; margin: 0; width: min(420px, calc(100% - 32px)); max-height: calc(100dvh - 82px); padding: 18px; overflow: auto; border: 1px solid #CBD5E1; border-radius: 16px; color: #1F2937; }
 .inbox::backdrop { background: rgb(16 37 30 / 26%); }
 .inbox header, .inbox footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .inbox h2 { margin: 0; font-size: 1.15rem; }
 .inbox-list { list-style: none; padding: 0; margin: 12px 0; }
-.inbox-list li + li { border-top: 1px solid #e3e9e6; }
+.inbox-list li + li { border-top: 1px solid #E5E7EB; }
 .message { display: grid; gap: 5px; width: 100%; padding: 12px 8px; border: 0; border-radius: 8px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
-.message:hover, .message:focus-visible { background: #edf5f0; }
-.message small { color: #126f5c; }
-.message time { font-size: .8rem; color: #4c6459; }
+.message:hover, .message:focus-visible { background: #EEF2FF; }
+.message small { color: #4338CA; }
+.message time { font-size: .8rem; color: #4B5563; }
 .message-content { white-space: pre-wrap; }
-.inbox-error { color: #a33a38; }
+.inbox-error { color: #B91C1C; }
 </style>
