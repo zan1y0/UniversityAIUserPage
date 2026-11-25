@@ -484,12 +484,12 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 .option:hover {
-  border-color: #c7d2fe;
+  border-color: var(--c-accent-ring);
 }
 .option.chosen {
-  color: #3730a3;
-  background: #eef2ff;
-  border-color: #c7d2fe;
+  color: var(--c-accent-ink);
+  background: var(--c-accent-soft);
+  border-color: var(--c-accent-ring);
 }
 .option-key {
   display: inline-flex;
@@ -499,8 +499,8 @@ onBeforeUnmount(() => {
   height: 20px;
   font-size: 10.5px;
   font-weight: 700;
-  color: #4f46e5;
-  background: #eef2ff;
+  color: var(--c-accent);
+  background: var(--c-accent-soft);
   border-radius: 6px;
 }
 .answer-sheet {
@@ -519,12 +519,12 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 .sheet-dot.done {
-  color: #3730a3;
-  background: #eef2ff;
-  border-color: #c7d2fe;
+  color: var(--c-accent-ink);
+  background: var(--c-accent-soft);
+  border-color: var(--c-accent-ring);
 }
 .sheet-dot.active {
-  outline: 2px solid #4f46e5;
+  outline: 2px solid var(--c-accent);
   outline-offset: 1px;
 }
 </style>

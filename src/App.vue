@@ -76,7 +76,7 @@ function resetDemo() {
 <template>
   <a class="skip-link" href="#main-content">跳至主要内容</a>
   <div v-if="['/login', '/activate'].includes(route.path)"><RouterView /></div>
-  <div v-else class="app-shell">
+  <div v-else class="app-shell" :class="`mode-${app.mode}`">
     <button
       v-if="menuOpen"
       class="sidebar-backdrop"
@@ -179,6 +179,7 @@ function resetDemo() {
   <FloatingCompanion
     v-if="route.path !== '/login' && (app.mode === 'demo' || app.user?.activeRole === 'STUDENT')"
     :key="`${app.mode}-${app.user?.id ?? ''}`"
+    :class="`mode-${app.mode}`"
   />
   <div v-if="app.toast" class="toast" role="status">
     <AppIcon name="success" :size="18" />{{ app.toast }}

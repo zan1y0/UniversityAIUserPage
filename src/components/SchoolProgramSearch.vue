@@ -189,7 +189,7 @@ onBeforeUnmount(() => lifetime.abort());
   vertical-align: top;
 }
 .program-table thead {
-  background: #EEF2FF;
+  background: var(--c-accent-soft);
 }
 .program-table small {
   display: block;

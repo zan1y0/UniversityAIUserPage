@@ -186,8 +186,8 @@ const curveOption = computed(() => {
         type: 'line',
         data: curve.map((v) => v.studyMinutes),
         smooth: true,
-        areaStyle: { color: '#EEF2FF' },
-        color: '#6366F1',
+        areaStyle: { color: '#eaf5f5' },
+        color: '#4c9caa',
       },
     ],
   };
@@ -207,7 +207,7 @@ const radarOption = computed(() => {
         type: 'radar',
         data: [{ value: items.map((v) => Number(v.mastery) * 100), name: '掌握程度' }],
         areaStyle: { opacity: 0.18 },
-        color: '#6366F1',
+        color: '#4c9caa',
       },
     ],
   };

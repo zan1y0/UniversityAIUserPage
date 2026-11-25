@@ -551,7 +551,7 @@ async function submit() {
   vertical-align: top;
 }
 .result-scroll thead {
-  background: #EEF2FF;
+  background: var(--c-accent-soft);
 }
 .result-scroll small {
   display: block;

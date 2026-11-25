@@ -133,7 +133,7 @@ function transition() {
 
 <style scoped>
 .task-card { padding: 16px 0; border-bottom: 1px solid #F9FAFB; overflow-wrap: anywhere; }
-.task-card.linked { border-radius: 8px; box-shadow: 0 0 0 2px #a5b4fc; padding-inline: 12px; }
+.task-card.linked { border-radius: 8px; box-shadow: 0 0 0 2px var(--c-focus); padding-inline: 12px; }
 .task-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .task-heading h3 { margin: 0; }
 .task-card label { display: grid; gap: 8px; margin: 14px 0; }

@@ -200,13 +200,13 @@ onMounted(load);
   color: #6b7280;
 }
 .rail-notes li.unread b {
-  color: #4338ca;
+  color: var(--c-accent-dark);
 }
 .link-btn {
   margin-top: 4px;
   padding: 0;
   font-size: 11px;
-  color: #4f46e5;
+  color: var(--c-accent);
   background: none;
   border: 0;
   cursor: pointer;

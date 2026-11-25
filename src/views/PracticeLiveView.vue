@@ -345,7 +345,7 @@ onMounted(() => {
   transition: border-color 0.15s ease, background 0.15s ease;
 }
 .q-option:hover:not(:disabled) {
-  border-color: #c7d2fe;
+  border-color: var(--c-accent-ring);
   background: #f8faff;
 }
 .q-option:disabled {
@@ -369,8 +369,8 @@ onMounted(() => {
   border-color: #fecaca;
 }
 .q-option.picked {
-  border-color: #c7d2fe;
-  background: #eef2ff;
+  border-color: var(--c-accent-ring);
+  background: var(--c-accent-soft);
 }
 .q-option.right {
   border-color: #bbf7d0;

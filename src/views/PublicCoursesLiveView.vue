@@ -286,8 +286,8 @@ onMounted(load);
   background: #fbfbfe;
 }
 .node-row.active {
-  border-color: #c7d2fe;
-  background: #eef2ff;
+  border-color: var(--c-accent-ring);
+  background: var(--c-accent-soft);
 }
 .explain-steps {
   margin: 8px 0 0;

@@ -82,6 +82,6 @@ async function toggleRoster(classId: string) {
 .recipient-class:last-child { border-bottom: 0; padding-bottom: 0; }
 .recipient-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: space-between; align-items: center; }
 .recipients label { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
-.recipients input { width: auto; accent-color: #4338CA; }
+.recipients input { width: auto; accent-color: var(--c-accent-dark); }
 .roster { display: flex; flex-wrap: wrap; gap: 5px 18px; margin: 8px 0 0 16px; }
 </style>

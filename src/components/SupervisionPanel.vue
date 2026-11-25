@@ -447,12 +447,12 @@ onBeforeUnmount(() => {
   display: none;
 }
 .supervision {
-  --accent: #4f46e5;
-  --tint: #EEF2FF;
+  --accent: var(--c-accent);
+  --tint: var(--c-accent-soft);
 }
 .supervision[data-mode='SCHOLAR'] {
-  --accent: #4F46E5;
-  --tint: #EEF2FF;
+  --accent: var(--c-accent);
+  --tint: var(--c-accent-soft);
 }
 .supervision[data-mode='STRICT'] {
   --accent: #92400E;

@@ -207,7 +207,7 @@ async function send() {
   margin-bottom: 4px;
   font-size: 11px;
   font-weight: 600;
-  color: #4f46e5;
+  color: var(--c-accent);
 }
 .qa-text {
   margin: 0;

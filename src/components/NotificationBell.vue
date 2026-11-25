@@ -153,8 +153,8 @@ button.icon-btn.bell-button { position: relative; display: inline-flex; }
 .inbox-list { list-style: none; padding: 0; margin: 12px 0; }
 .inbox-list li + li { border-top: 1px solid #E5E7EB; }
 .message { display: grid; gap: 5px; width: 100%; padding: 12px 8px; border: 0; border-radius: 8px; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; overflow-wrap: anywhere; }
-.message:hover, .message:focus-visible { background: #EEF2FF; }
-.message small { color: #4338CA; }
+.message:hover, .message:focus-visible { background: var(--c-accent-soft); }
+.message small { color: var(--c-accent-dark); }
 .message time { font-size: .8rem; color: #4B5563; }
 .message-content { white-space: pre-wrap; }
 .inbox-error { color: #B91C1C; }

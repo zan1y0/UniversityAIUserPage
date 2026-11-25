@@ -132,7 +132,7 @@ const stripRight = computed(() => {
 const trendOption = computed(() => {
   const curve = dashboard.value?.curve || [];
   return {
-    color: ['#6366F1'],
+    color: ['#4c9caa'],
     tooltip: { trigger: 'axis' },
     grid: { left: 35, right: 15, top: 20, bottom: 25 },
     xAxis: {
@@ -154,7 +154,7 @@ const trendOption = computed(() => {
         type: 'line',
         smooth: true,
         symbolSize: 5,
-        areaStyle: { color: '#EEF2FF' },
+        areaStyle: { color: '#eaf5f5' },
         data: curve.map((p) => p.studyMinutes),
       },
     ],
@@ -164,7 +164,7 @@ const trendOption = computed(() => {
 const radarOption = computed(() => {
   const items = radar.value?.items || [];
   return {
-    color: ['#6366F1'],
+    color: ['#4c9caa'],
     radar: {
       indicator: items.map((i) => ({ name: i.name, max: 100 })),
       axisName: { color: '#6B7280', fontSize: 11 },
@@ -370,6 +370,30 @@ onMounted(() => {
     <button class="text-btn small" type="button" @click="loadDashboard">重试</button>
   </div>
 
+  <section class="card dash-quick-row">
+    <div class="card-heading">
+      <h2>学习快捷入口</h2>
+      <span class="muted small">从这里开始</span>
+    </div>
+    <div class="dash-quick">
+      <RouterLink
+        v-for="item in [
+          { path: '/practice', icon: 'pen', title: '刷题练习' },
+          { path: '/qa', icon: 'chat', title: 'AI 答疑' },
+          { path: '/exams', icon: 'exam', title: '模考估分' },
+          { path: '/planning', icon: 'calendar', title: '学习计划' },
+        ]"
+        :key="item.path"
+        :to="item.path"
+        class="dash-quick-link"
+      >
+        <span class="module-icon"><AppIcon :name="item.icon" :size="16" /></span>
+        <span>{{ item.title }}</span>
+        <AppIcon name="chevron" :size="14" />
+      </RouterLink>
+    </div>
+  </section>
+
   <div class="dash-body">
     <div class="dash-main">
       <section class="card">
@@ -483,29 +507,6 @@ onMounted(() => {
           <button class="btn" type="submit" :disabled="saving">{{ saving ? '正在记录…' : '记录一次学习' }}</button>
           <p class="muted small">单条记录不超过 24 小时；重叠时段会去重后计入。</p>
         </form>
-      </section>
-
-      <section class="card">
-        <div class="card-heading">
-          <h2>学习快捷入口</h2>
-        </div>
-        <div class="dash-quick">
-          <RouterLink
-            v-for="item in [
-              { path: '/practice', icon: 'pen', title: '刷题练习' },
-              { path: '/qa', icon: 'chat', title: 'AI 答疑' },
-              { path: '/exams', icon: 'exam', title: '模考估分' },
-              { path: '/planning', icon: 'calendar', title: '学习计划' },
-            ]"
-            :key="item.path"
-            :to="item.path"
-            class="dash-quick-link"
-          >
-            <span class="module-icon"><AppIcon :name="item.icon" :size="16" /></span>
-            <span>{{ item.title }}</span>
-            <AppIcon name="chevron" :size="14" />
-          </RouterLink>
-        </div>
       </section>
 
       <section class="card">

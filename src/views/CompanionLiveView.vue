@@ -203,9 +203,9 @@ onMounted(load);
   padding: 10px 12px;
   font-size: 12px;
   line-height: 1.7;
-  color: #3730a3;
-  background: #eef2ff;
-  border: 1px solid #ddd6fe;
+  color: var(--c-accent-ink);
+  background: var(--c-accent-soft);
+  border: 1px solid var(--c-accent-border);
   border-radius: 10px;
 }
 </style>

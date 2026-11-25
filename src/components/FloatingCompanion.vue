@@ -255,7 +255,7 @@ onBeforeUnmount(() => {
           <stop offset="1" stop-color="#4B5563" />
         </radialGradient>
         <linearGradient id="visor" x2=".8" y2="1">
-          <stop stop-color="#6366F1" />
+          <stop stop-color="#4c9caa" />
           <stop offset=".4" stop-color="#111827" />
           <stop offset="1" stop-color="#091123" />
         </linearGradient>
@@ -431,12 +431,12 @@ onBeforeUnmount(() => {
 .orb-panel .mode-badge {
   padding: 3px 9px;
   border-radius: 12px;
-  color: #4338ca;
-  background: #EEF2FF;
+  color: var(--c-accent-dark);
+  background: var(--c-accent-soft);
 }
 .orb-panel .mode-badge[data-mode='SCHOLAR'] {
-  color: #4F46E5;
-  background: #EEF2FF;
+  color: var(--c-accent);
+  background: var(--c-accent-soft);
 }
 .orb-panel .mode-badge[data-mode='STRICT'] {
   color: #92400E;
@@ -584,13 +584,13 @@ onBeforeUnmount(() => {
   max-width: 100%;
 }
 .mine .bubble {
-  background: #EEF2FF;
+  background: var(--c-accent-soft);
   border-radius: 16px 4px 16px 16px;
 }
 .bubble a {
   gap: 6px;
   overflow-wrap: anywhere;
-  color: #4F46E5;
+  color: var(--c-accent);
 }
 .composer {
   margin: 8px 16px 16px;
@@ -612,7 +612,7 @@ onBeforeUnmount(() => {
   padding: 3px 4px 10px;
 }
 .composer:focus-within {
-  border-color: #C7D2FE;
+  border-color: var(--c-accent-ring);
 }
 .tools {
   gap: 8px;
@@ -622,14 +622,14 @@ onBeforeUnmount(() => {
   flex-shrink: 0;
 }
 .tools .pill {
-  border: 1px solid #E0E7FF;
-  color: #4338CA;
-  background: #EEF2FF;
+  border: 1px solid var(--c-accent-border-soft);
+  color: var(--c-accent-dark);
+  background: var(--c-accent-soft);
   border-radius: 24px;
   padding: 7px 12px;
 }
 .tools .pill[aria-pressed='true'] {
-  background: #E0E7FF;
+  background: var(--c-accent-border-soft);
 }
 .mail {
   position: relative;
@@ -642,10 +642,10 @@ onBeforeUnmount(() => {
   cursor: pointer;
 }
 .mail:focus-within {
-  outline: 2px solid #6366F1;
+  outline: 2px solid var(--c-chart);
 }
 .tools .send {
-  background: #4F46E5;
+  background: var(--c-accent);
   color: white;
 }
 .send:disabled {

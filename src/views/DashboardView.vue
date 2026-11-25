@@ -107,7 +107,7 @@ const examSummary = computed(() => {
 });
 const focusDash = computed(() => (focusRate.value / 100) * 264);
 const trendOption = computed(() => ({
-  color: ['#6366F1'],
+  color: ['#4c9caa'],
   tooltip: { trigger: 'axis' },
   grid: { left: 35, right: 15, top: 20, bottom: 25 },
   xAxis: {
@@ -129,7 +129,7 @@ const trendOption = computed(() => ({
       type: 'line',
       smooth: true,
       symbolSize: 6,
-      areaStyle: { color: '#EEF2FF' },
+      areaStyle: { color: '#eaf5f5' },
       data: weekDays.value.map((d) =>
         study.state.events.filter((e) => e.date === d).reduce((n, e) => n + e.minutes, 0),
       ),
@@ -137,7 +137,7 @@ const trendOption = computed(() => ({
   ],
 }));
 const radarOption = computed(() => ({
-  color: ['#6366F1'],
+  color: ['#4c9caa'],
   radar: {
     indicator: ['数学', '英语', '政治', '专业课'].map((s) => ({ name: s, max: 100 })),
     axisName: { color: '#6B7280', fontSize: 11 },
@@ -223,6 +223,29 @@ onMounted(() => {
         <p>专注学习占比</p>
         <b>{{ focusRate }}<small>%</small></b>
         <span>{{ study.wrongIds.length }} 道错题待复习</span>
+      </div>
+    </section>
+
+    <section class="card dash-quick-row">
+      <div class="card-heading">
+        <h2>快捷入口</h2>
+        <span class="muted small">从这里开始</span>
+      </div>
+      <div class="dash-quick">
+        <RouterLink
+          v-for="item in [
+            { path: '/qa', icon: 'chat', title: '问懂一道题' },
+            { path: '/practice', icon: 'pen', title: '每天练一点' },
+            { path: '/exams', icon: 'exam', title: '限时模考' },
+            { path: '/schools', icon: 'school', title: '院校筛选' },
+          ]"
+          :key="item.path"
+          :to="item.path"
+          class="dash-quick-link"
+          ><span class="module-icon"><AppIcon :name="item.icon" :size="16" /></span
+          ><span>{{ item.title }}</span
+          ><AppIcon name="chevron" :size="14"
+        /></RouterLink>
       </div>
     </section>
 
@@ -394,28 +417,6 @@ onMounted(() => {
           >
         </section>
 
-        <section class="card">
-          <div class="card-heading">
-            <h2>快捷入口</h2>
-            <span class="muted small">从这里开始</span>
-          </div>
-          <div class="dash-quick">
-            <RouterLink
-              v-for="item in [
-                { path: '/qa', icon: 'chat', title: '问懂一道题' },
-                { path: '/practice', icon: 'pen', title: '每天练一点' },
-                { path: '/exams', icon: 'exam', title: '限时模考' },
-                { path: '/schools', icon: 'school', title: '院校筛选' },
-              ]"
-              :key="item.path"
-              :to="item.path"
-              class="dash-quick-link"
-              ><span class="module-icon"><AppIcon :name="item.icon" :size="15" /></span
-              ><span>{{ item.title }}</span
-              ><AppIcon name="chevron" :size="13"
-            /></RouterLink>
-          </div>
-        </section>
 
         <section class="card">
           <div class="card-heading">

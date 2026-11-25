@@ -266,8 +266,8 @@ async function explainQuestion(question: Question) {
   cursor: pointer;
 }
 .subject-row.active {
-  border-color: #c7d2fe;
-  background: #eef2ff;
+  border-color: var(--c-accent-ring);
+  background: var(--c-accent-soft);
 }
 .child-row {
   margin-left: 16px;

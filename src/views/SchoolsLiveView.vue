@@ -284,8 +284,8 @@ onMounted(search);
   flex: 0 0 120px;
 }
 .is-on {
-  border-color: #4f46e5 !important;
-  color: #4338ca !important;
-  background: #eef2ff !important;
+  border-color: var(--c-accent) !important;
+  color: var(--c-accent-dark) !important;
+  background: var(--c-accent-soft) !important;
 }
 </style>

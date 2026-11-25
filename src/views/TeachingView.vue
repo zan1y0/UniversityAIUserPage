@@ -286,7 +286,7 @@ watch(linkedTask, showLinkedTask);
 .teaching-card h2 { margin: 0 0 12px; }
 .class-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .class-toolbar h2 { margin: 0 8px 0 0; }
-.class-choice[aria-pressed='true'] { color: #4338CA; border-color: #4338CA; background: #EEF2FF; }
+.class-choice[aria-pressed='true'] { color: var(--c-accent-dark); border-color: var(--c-accent-dark); background: var(--c-accent-soft); }
 .class-details { margin-top: 8px; }
 .class-dialog { box-sizing: border-box; width: min(440px, calc(100% - 32px)); padding: 24px; border: 1px solid #CBD5E1; border-radius: 16px; color: inherit; }
 .class-dialog::backdrop { background: rgb(16 37 30 / 42%); }
@@ -295,7 +295,7 @@ watch(linkedTask, showLinkedTask);
 .teaching-card label { display: grid; gap: 8px; margin: 14px 0; }
 .teaching-card input, .teaching-card select, .teaching-card textarea { width: 100%; padding: 10px 12px; border: 1px solid #CBD5E1; border-radius: 9px; font: inherit; }
 .teaching-card .checkbox-label { display: flex; align-items: center; }
-.checkbox-label input { width: auto; accent-color: #4338CA; }
+.checkbox-label input { width: auto; accent-color: var(--c-accent-dark); }
 
 .summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; }
 .summary-grid p { padding: 14px; border-radius: 12px; background: #F9FAFB; }
